@@ -6,8 +6,8 @@
 *  This software is intended to convert english text into braille characters
 *  MODULE: Braille_Dictionary_Grade_2
 *  Filename: Braille_Dictionary_Grade_2.py
-*  Version: 2.1.2
-*  Date: March 4, 2019
+*  Version: 2.0.0
+*  Date: Sep 1, 2019
 *  
 *  Authors: Aditya Kumar Singh
 *  Team Name: Victorious Visionaries
@@ -348,7 +348,7 @@ class Grade2:
     """
     def __init__(self):
         self.last_type_modifier=False
-        braille_code=[]
+        self.braille_code=[]
         
     """
     This Function prints all the characters defined in the main dictionary
@@ -382,87 +382,8 @@ class Grade2:
         length = len(input_string)
         return [input_string[i:j+1] for i in range(length) for j in range(i,length)]
 
-       
     """
-    This Function checks whether the given word can be shortened or not.
-    If it can then it will return the shortened word or else it will simply return the
-    given word.
-    NOTE: This function doesnt convert the the given string into braille,
-          this only sees if it can be be shortened or not.
-          If yes then it returns the shortened string.
-    """
-    def process(self,text):
-        m=""                                    #String to store afer shortening the given text
-        if (text.isupper() or text.islower() or (text[0].isupper() and text[1:len(text)].islower())):   #Checking if it fits in Grade 2 standards
-            char=text.lower()                       
-            if char in self.std_aln:                #Checking in standalone dictionary
-                #print("Standalone word found")
-                """
-                   This checks for the type of capatallisation and add the capatallsing
-                   letter accordingly
-                """
-                if(text.isupper()):                 
-                    m+="(_caps)(_caps)"
-                elif(text[0].isupper()):
-                    m+="(_caps)"
-                m+=self.std_aln[char]
-            elif char in self.abbr:                 #Checking in abbreviation dictionary
-                #print("Abbreviation found")
-                if(text.isupper()):
-                    m+="(_caps)(_caps)"
-                elif(text[0].isupper()):
-                    m+="(_caps)"
-                m+=self.abbr[char]
-            elif char in self.cwhole_5 or char in self.cwhole_45 or char in self.cwhole_456:  #Checking in word contraction dictionary
-                #print("Whole word contraction found")
-                """
-                 Now checking which under which type of word contraction,
-                 the given word really falls in.
-                """
-                if char in self.cwhole_5:     #Dot 5 raised word contraction
-                    if(text.isupper()):
-                        m+="(_caps)(_caps)"
-                    elif(text[0].isupper()):
-                        m+="(_caps)"
-                    m+="(_w5)"+self.cwhole_5[char]
-                elif char in self.cwhole_45:     #Dot 4,5 raised word contraction
-                    if(text.isupper()):
-                        m+="(_caps)(_caps)"
-                    elif(text[0].isupper()):
-                        m+="(_caps)"
-                    m+="(_w45)"+self.cwhole_45[char]
-                elif char in self.cwhole_456:       #Dot 4,5,6 raised word contraction
-                    if(text.isupper()):
-                        m+="(_caps)(_caps)"
-                    elif(text[0].isupper()):
-                        m+="(_caps)"
-                    m+="(_w456)"+self.cwhole_456[char]
-            elif char in self.Dict:             #Checking if its directly there in main dictionary
-                    m="("+char+")"
-            else:
-                #Getting all possible sub strings of the given word
-                sub_str=self.get_substrings(text)
-                flag=0
-                #checking whether any partial contraction is possible or not
-                for i in sub_str:
-                    if i in self.cpartial_56 or i in self.cpartial_6 or i in self.cpartial_46 or i in self.cwhole_5 or i in self.cwhole_45 or i in self.cwhole_456 or i in self.std_aln or i in self.Dict:
-                        flag=1
-                        #print("Partial word contraction found")
-                        break
-                if(flag):
-                    #Getting the partial contractions
-                    partial_words=self.check_partial(text,sub_str)
-                    #print(partial_words)
-                    m=self.get_partials(partial_words,text)
-                else:
-                    m=text
-        else:
-            m=text
-        #print(m)
-        return m
-
-    """
-    This fucntion will convert the partial contractions into proper format so that finally it
+    This function will convert the partial contractions into proper format so that finally it can be 
     converted to braille
     """
     def get_partials(self,partial_words,text):
@@ -520,15 +441,16 @@ class Grade2:
         
     
     """
-    This functions find the suitable partial contraction according to rules. 
+    This functions find the suitable partial contraction according to the rules. 
     """
     def check_partial(self,text,sub_str):
         possible_replacement=[]
         #First finding all the possible replacements
         for i in sub_str:
             if i in self.cpartial_56 or i in self.cpartial_6 or i in self.cpartial_46 or i in self.cwhole_5 or i in self.cwhole_45 or i in self.cwhole_456 or i in self.std_aln or i in self.Dict:
-                if len(i)>=2:
                     possible_replacement.append(i)
+        possible_replacement.sort(key=len,reverse=True)
+        print(possible_replacement)
         #Now applying rules of Grade 2 contractions
         index=0
         text_lower=text.lower()
@@ -593,6 +515,68 @@ class Grade2:
                         j=-1
                 j=j+1
         return possible_replacement
+   
+    """
+    This Function checks whether the given word can be shortened or not.
+    If it can then it will return the shortened word or else it will simply return the
+    given word.
+    NOTE: This function doesnt convert the the given string into braille,
+          this only sees if it can be be shortened or not.
+          If yes then it returns the shortened string.
+    """
+    def process(self,text):
+        m=""                                    #String to store after shortening the given text
+        if (text.isupper() or text.islower() or (text[0].isupper() and text[1:len(text)].islower())):   #Checking if it fits in Grade 2 standards
+            char=text.lower()
+            if(text.isupper()):                 
+                m+="(_caps)(_caps)"
+            elif(text[0].isupper()):
+                m+="(_caps)"                      
+            if char in self.std_aln:                #Checking in standalone dictionary
+                #print("Standalone word found")
+                """
+                   This checks for the type of capatallisation and add the capatallsing
+                   letter accordingly
+                """
+                m+=self.std_aln[char]
+            elif char in self.abbr:                 #Checking in abbreviation dictionary
+                #print("Abbreviation found")
+                m+=self.abbr[char]
+            elif char in self.cwhole_5 or char in self.cwhole_45 or char in self.cwhole_456:  #Checking in word contraction dictionary
+                #print("Whole word contraction found")
+                """
+                 Now checking which under which type of word contraction,
+                 the given word really falls in.
+                """
+                if char in self.cwhole_5:     #Dot 5 raised word contraction
+                    m+="(_w5)"+self.cwhole_5[char]
+                elif char in self.cwhole_45:     #Dot 4,5 raised word contraction
+                    m+="(_w45)"+self.cwhole_45[char]
+                elif char in self.cwhole_456:       #Dot 4,5,6 raised word contraction
+                    m+="(_w456)"+self.cwhole_456[char]
+            elif char in self.Dict:             #Checking if its directly there in main dictionary
+                    m="("+char+")"
+            else:
+                #Getting all possible sub strings of the given word
+                sub_str=self.get_substrings(text)
+                flag=0
+                #checking whether any partial contraction is possible or not
+                for i in sub_str:
+                    if i in self.cpartial_56 or i in self.cpartial_6 or i in self.cpartial_46 or i in self.cwhole_5 or i in self.cwhole_45 or i in self.cwhole_456 or i in self.std_aln or i in self.Dict:
+                        flag=1
+                        #print("Partial word contraction found")
+                        break
+                if(flag):
+                    #Getting the partial contractions
+                    partial_words=self.check_partial(text,sub_str)
+                    #print(partial_words)
+                    m=self.get_partials(partial_words,text)
+                else:
+                    m=text
+        else:
+            m=text
+        print(m)
+        return m
 
     """
      This function checks for the index of a balanced parenthesis in the passed string
@@ -649,7 +633,6 @@ class Grade2:
                         count+=1
                     else:                               #if not then again send this word to get it shortened. 
                         char=self.process(substr[count])
-                        temp=0
                         m=self.get_braille(char)        #Call itself to process the new form.
                         for arr in m:
                             code.append(arr)                      
@@ -664,7 +647,7 @@ class Grade2:
 
     """
        This function takes the word first and then process it as per Grade 2.
-       If doesnt suit with grade 2 then simply with grade 1.
+       If doesnt fits with grade 2 then simply with grade 1.
     """
     def process_word(self,text):
         char=""
@@ -674,7 +657,7 @@ class Grade2:
             print("Hence, it will be converted as per GRADE 1 standards")
             #Function to call grade 1 conversion
         else:
-            #print(conv_str)
+            print(conv_str)
             char=self.get_braille(conv_str)
         return char
             
@@ -694,7 +677,6 @@ def print_braille(braille):
   
 braille=Grade2()                   #Object Created
 
-"""
 ch='y'
 while(ch=='y'):
     i=input("Enter string: ")
@@ -703,9 +685,9 @@ while(ch=='y'):
         break
     print("Given text:" + i)
     print("Text after conversion: ")
-    code=Braille.process_word(i)
+    code=braille.process_word(i)
     print_braille(code)
-
+"""
 pre_defined_words=["and", "for", "of", "the", "with", "child", "shall", "this", "which", "out", "ow", "will", "be", "enough", "to", "were", "his", "in", "was", "by", "still", "a", "but", "can", "do", "every", "from", "go", "have", "I", "just", "knowledge", "like", "more", "not", "o", "people", "quite", "rather", "so", "that", "us", "very", "it", "you", "as", "character", "day", "ever", "father", "here", "know", "lord", "mother", "name", "one", "ought", "part", "question", "right", "some", "there", "through", "time", "under", "where", "work", "young", "these", "those", "upon", "whose", "word", "cannot", "had", "many", "spirit", "their", "world", "about", "above", "according", "across", "after", "afternoon", "afterward", "again", "against", "almost", "already", "also", "although", "altogether", "always", "because", "before", "behind", "below", "beneath", "beside", "between", "beyond", "blind", "braille", "children", "conceive", "conceiving", "could", "deceive", "deceiving", "declare", "declaring", "either", "first", "friend", "good", "great", "herself", "him", "himself", "immediate", "letter", "little", "much", "must", "myself", "necessary", "neither", "o'clock", "oneself", "ourselves", "paid", "perceive", "perceiving", "perhaps", "quick", "receive", "receiving", "rejoice", "rejoicing", "said", "should", "such", "themselves", "thyself", "today", "together", "tonight", "would", "its", "itself", "your", "yourself", "yourselves"]
 
 
@@ -717,5 +699,4 @@ for i in pre_defined_words:
 
 #print(len(pre_defined_words))
 """
-
 
