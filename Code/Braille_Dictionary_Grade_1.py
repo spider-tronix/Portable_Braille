@@ -148,8 +148,20 @@ class Grade1:
             print("..")
 
     """
+    This Function assign type modifier to the given char input
+    """
+    def decode_char_type(self, char):
+        if(char.isalpha()):
+            if(char.islower()):
+                return "lower"
+            elif(char.isupper()):
+                return "upper"
+        elif(char.isnumeric()):
+            return "num"
+
+    """
     This function encodes the given english word into Braille
-    """           
+    """ 
     def decode_grade1(self,word):
         """
           In this function if you want to print the current character which is being
@@ -160,46 +172,33 @@ class Grade1:
         """
         #Checking for firstrun
         if(self.last_type_modifier==False):
-            if(word[0].isalpha()):
-               if(word[0].islower()):
-                   self.last_type_modifier="lower"
-                   #self.print_braille1("_letter")
-                   #self.braille_code.append(self.Dict["_letter"])
-               elif(word[0].isupper()):
-                   self.last_type_modifier="upper"
-            elif(word[0].isnumeric()):
-                self.last_type_modifier="num"
-                #self.print_braille1("_number")
+            self.last_type_modifier=self.decode_char_type(word[0])
+            if(self.last_type_modifier == "num"):
                 self.braille_code.append(self.Dict["_number"])
+
         m = -1                                  #Variable holding index position for the string word
         while(m<len(word)-1):
             #Update the iterating variable
             m+=1
             #Extracting the character at index m in string word
             i=word[m]
+            final_index=len(word)
             #Checking for type change
-            if(i.islower() and (self.last_type_modifier!="lower")):
-                if(self.last_type_modifier=="upper"):
-                    self.last_type_modifier="lower"
-                else:
-                    self.last_type_modifier="lower"
-                    #self.print_braille1("_letter")
+            if(self.decode_char_type(word[m]) != self.last_type_modifier):
+                self.last_type_modifier = self.decode_char_type(word[m])
+                if(self.last_type_modifier == "lower"):
                     self.braille_code.append(self.Dict["_letter"])
-                    
-            elif(i.isnumeric() and (self.last_type_modifier!="num")):
-                self.last_type_modifier="num"
-                #self.print_braille1("_number")
-                self.braille_code.append(self.Dict["_number"])
-            elif(i.isupper()):
-                self.last_type_modifier="upper"
-                final_index=len(word)
-                if(final_index==1):
-                    self.braille_code.append(self.Dict["_caps"])
-                    if i.lower() in self.Dict:
-                        self.braille_code.append(self.Dict[i.lower()])
-                    else:
-                        self.braille_code.append([0, 0, 0, 0, 0, 0])
-                    return
+                if(self.last_type_modifier == "num"):
+                    self.braille_code.append(self.Dict["_number"])
+                if(self.last_type_modifier == "upper"):
+                    if(final_index==1):                   # if word is single char
+                        self.braille_code.append(self.Dict["_caps"])
+                        if i.lower() in self.Dict:
+                            self.braille_code.append(self.Dict[i.lower()])
+                        else:
+                            self.braille_code.append([0, 0, 0, 0, 0, 0])
+                        return
+            if(i.isupper()):
                 flag=0
                 while(final_index!=(m+1)):
                     if(word[m:final_index].isupper() and word[m:final_index].isalpha()):
@@ -216,7 +215,6 @@ class Grade1:
                                 self.braille_code.append(self.Dict[j.lower()])
                             else:
                                 self.braille_code.append([0, 0, 0, 0, 0, 0])
-                            
                         break
                     final_index-=1
                 m=final_index-1
@@ -286,14 +284,14 @@ def print_braille(braille):
 
 braille=Grade1()           #Object created
 
-"""
+
 test="asdfghAQWWWopiuytrew"
 
 brl=braille.encode_braille(test)
 print("Given word: " + test)
 print("Braille converted text: ")
 print_braille(brl)
-"""
+
 
 
 
