@@ -51,7 +51,7 @@
 
     3. Individual cells cannot represent words or abbreviations in this grade of Braille.
 
-    4. Characters invloved are a-z(with capatalization included), punctutators, numbers.
+    4. Characters invloved are a-z(with capitalization included), punctuators, numbers.
 
     5. For more visit "http://www.acb.org/tennessee/braille.html"
 

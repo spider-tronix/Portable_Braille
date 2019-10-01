@@ -6,16 +6,16 @@ These characters will be sent with appropriate delays to make the user understan
 
 ## Team:
 
-  • Aditya Kumar Singh [https://github.com/adityasingh3007]
+  • [Aditya Kumar Singh](https://github.com/adityasingh3007)
 
-  • Raj Kumar Bhagat [https://github.com/Rajk0520]
+  • [Raj Kumar Bhagat](https://github.com/Rajk0520)
 
-  • Ruphan S [https://github.com/ruphan]
+  • [Ruphan S](https://github.com/ruphan)
 
-  • Yash Patel [https://github.com/yash270200]
+  • [Yash Patel](https://github.com/yash270200)
 
 ## Working Video Demonstration:
-    https://youtu.be/wZ1dMdXMtPE
 
-
+[![](./images/pb_video.png)](https://youtu.be/wZ1dMdXMtPE)
+    
 # Repository Organized.
