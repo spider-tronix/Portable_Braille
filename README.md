@@ -16,6 +16,6 @@ These characters will be sent with appropriate delays to make the user understan
 
 ## Working Video Demonstration:
 
-[![](./images/pb_video.png)](https://youtu.be/wZ1dMdXMtPE)
+[![](./Images/pb_video.png)](https://youtu.be/wZ1dMdXMtPE)
     
 # Repository Organized.
