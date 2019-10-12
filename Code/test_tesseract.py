@@ -17,14 +17,15 @@
 """
 
 #Importing required Libraries
+
 try:
     from PIL import Image
 except ImportError:
     import Image
 
+import os
 import pytesseract
 import cv2
-import numpy as np
 
 """
     This program is just to test the OCR functionality.
@@ -36,3 +37,15 @@ cv2.imshow('text',text)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 print(pytesseract.image_to_string(text))
+
+"""
+To test the rotation detection functionality of the tesseract
+"""
+test_images = ['test1_0.jpg', 'test1_90.jpg', 'test1_180.jpg', 'test_tilt.png']
+for image in test_images:
+    path = os.path.join('..\\Images', image)
+    img = cv2.imread(path)
+    cv2.imshow(image, img)
+    print(image+' :', '\n', pytesseract.image_to_osd(path), '\n')
+cv2.waitKey(0)
+cv2.destroyAllWindows()
