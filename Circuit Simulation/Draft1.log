@@ -1,0 +1,50 @@
+Circuit: * E:\SPIDER\club project\braille\portable-braille\Circuit Simulation\Draft1.asc
+
+Early termination of direct N-R iteration.
+Direct Newton iteration failed to find .op point.  (Use ".option noopiter" to skip.)
+Starting Gmin stepping
+Increasing initial diagonal Gmin to 100
+Increasing initial diagonal Gmin to 1000
+Gmin = 1000
+vernier = 0.5
+vernier = 0.25
+vernier = 0.125
+vernier = 0.0625
+Gmin = 836.601
+vernier = 0.03125
+vernier = 0.015625
+vernier = 0.0078125
+vernier = 0.00390625
+Gmin = 822.125
+vernier = 0.00195313
+vernier = 0.000976563
+vernier = 0.000488281
+Gmin = 0
+Gmin = 0
+Gmin stepping failed
+
+Starting source stepping with srcstepmethod=0
+Source Step = 3.0303%
+Source Step = 33.3333%
+Source Step = 63.6364%
+Source Step = 93.9394%
+Source stepping succeeded in finding the operating point.
+
+
+Date: Sun Sep 08 04:00:57 2019
+Total elapsed time: 0.333 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 4078
+traniter = 2265
+tranpoints = 1045
+accept = 1045
+rejected = 0
+matrix size = 68
+fillins = 157
+solver = Normal
+Matrix Compiler1: 11.50 KB object code size  2.2/1.1/[0.6]
+Matrix Compiler2: 8.51 KB object code size  0.9/2.3/[0.8]
+
