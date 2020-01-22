@@ -172,3 +172,45 @@ cv2.imwrite("equalizedHist.jpg", out)
 
 out = cv2.normalize(org, None, alphs=20, beta=240, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 cv2.imwrite("norm1.jpg", out)
+
+# table detection
+
+import cv2
+import pytesseract
+
+img = cv2.imread('C:\\Users\\yp270\\Desktop\\Spider\\portable-braille\\Images\\tesseract test\\IMG_20191005_095839.jpg')
+
+h, w, c = img.shape
+boxes = pytesseract.image_to_boxes(img)
+for b in boxes.splitlines():
+    b = b.split(' ')
+    img = cv2.rectangle(img, (int(b[1]), h - int(b[2])), (int(b[3]), h - int(b[4])), (0, 255, 0), 2)
+
+cv2.imshow('img', img)
+cv2.waitKey(0)
+
+# convert curve to line through page transformation
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def page_transformation(image_path, starting_row=int(input("Enter the row from which the transformation has to start:")),
+                        transformation_func=lambda x: x**0.2):
+    image = cv2.imread(image_path, 0)
+    output = np.zeros(image.shape, dtype=image.dtype)
+    rows, cols = image.shape
+
+    for i in range(cols):
+        increment = int(transformation_func(i))
+        col = image[starting_row-increment:, i]
+        output[:, i] = cv2.resize(col, (1, output.shape[0]), interpolation=cv2.INTER_CUBIC)[:, 0]
+
+    return output
+
+# example for a square root curve
+output = page_transformation("../Images/tesseract test/thresh.jpg")
+cv2.imshow('transformed image', output)
+cv2.imshow('original image', cv2.imread("../Images/tesseract test/thresh.jpg", 0))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
