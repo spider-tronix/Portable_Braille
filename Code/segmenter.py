@@ -38,11 +38,13 @@ class segmenter:
           ret.append(j)
       return ret
 
+SEG = segmenter()
+
 """
 str=[[1, 1, 1, 1, 1, 1],[1, 0, 1, 0, 1, 1],[0, 1, 0, 1, 1, 0],[1, 1, 0, 0, 0, 0],[1, 1, 0, 1, 1, 1],[1, 0,0, 0, 1, 1],
      [1, 1, 1, 1, 1, 1],[1, 0, 1, 0, 1, 1],[0, 1, 0, 1, 1, 0],[1, 1, 0, 0, 0, 0],[1, 1, 0, 1, 1, 1],[1, 0,0, 0, 1, 1]]
 
-SEG = segmenter()
+
 SEG.load_data(str)
 print(len(SEG.generate_data()))
 print(len(SEG.generate_data()))
