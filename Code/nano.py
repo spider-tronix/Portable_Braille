@@ -1,4 +1,5 @@
 import BT
+import segmenter as SM
 import time
 
 nano = BT.BTH_Nano()
@@ -35,29 +36,72 @@ def check_connection(A):
       check_connection(A+1)
 
 def load_cell(string):
-  # First checking the status of the cell buffer
-  ans = nano.send_char('\0')
-  if(ans=="0"):
-    print("Terminal has 0 cells. Loading cells to it.....")
-    i=0
-    #Start of frame
-    ans = nano.send_char(chr(2))
+  print("Terminal has 0 cells. Loading cells to it.....")
+  st_time = int(round(time.time() * 1000))
+  i=0
+  #Start of frame
+  ans = nano.send_char(chr(2))
+  if(ord(ans) is not 6):
+    print("SOF Tx failed.")
+  #Sending characters
+  while(i<len(string)):
+    ans = nano.send_char(string[i])
+    #print(string[i])
+    i=i+1
     if(ord(ans) is not 6):
-      print("SOF Tx failed.")
-    #Sending characters
-    while(i<len(string)):
-      ans = nano.send_char(string[i])
-      i=i+1
-      if(ord(ans) is not 6):
-        print("Char Tx failed")
-    #End of frame
-    ans = nano.send_char(chr(3))
-    if(ord(ans) is not 6):
-        print("EOF Tx failed")
+      print("Char Tx failed at index %d",i-1)
+  #End of frame
+  ans = nano.send_char(chr(3))
+  if(ord(ans) is not 3):
+      print("EOF Tx failed")
+  else:
+      end_time = int(round(time.time() * 1000))
+      print("Loading sucessfull. Loading took ",str(end_time-st_time)," milliSeconds.")
 
-print("==============================")
-check_socket(1)
-check_connection(1)
-load_cell("SEX")
-time.sleep(2)
-nano.close_socket()
+def process_data(arr):
+  if(len(arr)):
+    string =""
+    for i in arr:
+      string += str(int(i))
+    return string
+  return " "
+
+def check_next_loading():
+  flag = True
+  while(flag):
+    ans = nano.send_char('\0')
+    if(ans=="0"):
+      flag= False
+    else:
+      print("Terminal has cells. No need to load.")
+    time.sleep(1.5)
+  return True
+
+
+def initial_check():  
+  print("==============================")
+  #Checking socket and connecting to bluetooth
+  check_socket(1)
+  check_connection(1)
+
+def load_txt(txt):
+  SM.SEG.load_data(txt)
+
+def start_sending():
+  while(True):
+    nxt = check_next_loading()
+    if(nxt):
+      data_to_load = SM.SEG.generate_data()
+      load_cell(process_data(data_to_load))
+      if(len(data_to_load)<=54):
+        break
+
+def closeall():
+  time.sleep(2)
+  nano.close_socket()
+
+initial_check()
+load_txt([[1, 1, 1, 1, 1, 1],[1, 0, 1, 0, 1, 1],[0, 1, 0, 1, 1, 0],[1, 1, 0, 0, 0, 0],[1, 1, 0, 1, 1, 1],[1, 0,0, 0, 1, 1],
+     [1, 1, 1, 1, 1, 1],[1, 0, 1, 0, 1, 1],[0, 1, 0, 1, 1, 0],[1, 1, 0, 0, 0, 0],[1, 1, 0, 1, 1, 1],[1, 0,0, 0, 1, 1]])
+start_sending()
+closeall()

@@ -28,7 +28,7 @@ class Bluetooth {
 
 class Braille_buffer {
   private:
-    unsigned char cells[10];
+    unsigned char cells[60];
     bool buffer_empty = true;
     int char_count;
     int index;
@@ -41,9 +41,11 @@ class Braille_buffer {
     void load(unsigned char ch) {
       cells[index] = ch;
       index++;
+      char_count++;
     }
     void reset_index(){
       index = 0;
+      char_count = 0;
     }
     int count() {
       return char_count;
@@ -87,11 +89,11 @@ void try_connect(unsigned char ch) {
 
 void process_msg() {
   static bool loading = false;
-  uint8_t ch = (uint8_t)BT.MSG();
+  uint8_t ch = (uint8_t)BT.MSG();               // Get the recieved msg from MASTER
   if (loading) {
     if (ch == 0x03) {
       loading = false;
-      usart_send(ch);         //Acknowledgement with EOF
+      usart_send(ch);                 //Acknowledgement with EOF
     }
     else {
       Cells.load(ch);
@@ -100,12 +102,15 @@ void process_msg() {
     return;
   }
   if (ch == 0x00) {                   // Pi checking the cells count Nano has.
-    usart_send(Cells.count() + 48);
+    if(Cells.count()<9)
+      usart_send(Cells.count() + 48);
+    else
+      usart_send(57);
   }
   else if (ch == 0x02) {              // Start of text received.
     Cells.reset_index();
-    usart_send(0b00000110); 
-    loading = true;
+    usart_send(0b00000110);           // Ack by sending 06H
+    loading = true;                   //Flag to track loading
   }
 }
 
@@ -119,18 +124,17 @@ int main(void)
   while (1) {
     if (RX_RCV) {
 
-      if (BT.MSG() == '#' && BT.CONNECTION()) {
+      if (BT.MSG() == '#' && BT.CONNECTION()) {      // Connection was interrupted
         BT.set_conn(false);
       }
-      if (BT.CONNECTION()) {
+      if (BT.CONNECTION()) {                        // Already connected
         process_msg();
       }
       else {
-        try_connect(BT.MSG());
+        try_connect(BT.MSG());                      // Try connecting
       }
       RX_RCV = false;
     }
   }
   return 0;
 }
-
