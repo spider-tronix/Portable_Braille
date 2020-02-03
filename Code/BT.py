@@ -22,20 +22,18 @@ class BTH_Nano:
   def close_socket(self):
     if(self.sock):
       self.sock.close()
-    
+      
+  def send_char(self, ch):
+    self.sock.send(ch)
+    #time.sleep(0.1)
+    ans = self.sock.recv(2).decode('utf-8')
+    return ans
+  
   def connect(self):
-    self.sock.send('#')
-    time.sleep(0.5)
-    ans = self.sock.recv(4096).decode('utf-8')
+    ans = self.send_char('#')
     #print(ans)
     if(ans=="@"):
       self.connected = True
     else:
       self.connected = False
     return self.connected
-
-  def send_char(self, ch):
-    self.sock.send(ch)
-    #time.sleep(0.1)
-    ans = self.sock.recv(4096).decode('utf-8')
-    return ans

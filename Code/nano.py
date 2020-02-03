@@ -41,18 +41,18 @@ def load_cell(string):
   i=0
   #Start of frame
   ans = nano.send_char(chr(2))
-  if(ord(ans) is not 6):
+  if(int(ans) is not 6):
     print("SOF Tx failed.")
   #Sending characters
   while(i<len(string)):
     ans = nano.send_char(string[i])
     #print(string[i])
     i=i+1
-    if(ord(ans) is not 6):
+    if(int(ans) is not 6):
       print("Char Tx failed at index %d",i-1)
   #End of frame
   ans = nano.send_char(chr(3))
-  if(ord(ans) is not 3):
+  if(int(ans) is not 3):
       print("EOF Tx failed")
   else:
       end_time = int(round(time.time() * 1000))
