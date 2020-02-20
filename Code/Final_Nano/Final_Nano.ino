@@ -6,8 +6,6 @@ Braille_buffer Cells;
 Bluetooth BT;
 
 volatile bool RX_RCV = false;
-bool data[80];
-bool flag=1;
 
 void serialEvent() {
     unsigned char rcv = (unsigned char)Serial.read();
@@ -16,24 +14,14 @@ void serialEvent() {
 }
 
 void motd() {
-  Serial.println("Intialising........");
+  Serial.println("Intialising...");
   delay(100);
-  Serial.println("==================================================================================================================");
+  Serial.println("==================================================");
   delay(50);
-  Serial.println(" _____   ____  _____ _______       ____  _      ______         ____  _____            _____ _      _      ______  ");
-  delay(50);
-  Serial.println("|  __ \ / __ \|  __ \__   __|/\   |  _ \| |    |  ____|       |  _ \|  __ \     /\   |_   _| |    | |    |  ____| ");
-  delay(50);
-  Serial.println("| |__) | |  | | |__) | | |  /  \  | |_) | |    | |__          | |_) | |__) |   /  \    | | | |    | |    | |__    ");
-  delay(50);
-  Serial.println("|  ___/| |  | |  _  /  | | / /\ \ |  _ <| |    |  __|         |  _ <|  _  /   / /\ \   | | | |    | |    |  __|   ");
-  delay(50);
-  Serial.println("| |    | |__| | | \ \  | |/ ____ \| |_) | |____| |____        | |_) | | \ \  / ____ \ _| |_| |____| |____| |____  "); 
-  delay(50);
-  Serial.println("|_|     \____/|_|  \_\ |_/_/    \_\____/|______|______|       |____/|_|  \_\/_/    \_\_____|______|______|______| ");
-  delay(50);
-  Serial.println("");
-  Serial.println("==================================================================================================================");
+  Serial.println("                PORTABLE BRAILLE");
+  Serial.println("Version: 2.0");
+  Serial.println("Made By: Aditya Kumar Singh, Ruphan S");
+  Serial.println("==================================================");
   delay(50);
 }
 
@@ -45,6 +33,8 @@ void setup()
   sei();
 }
 
+int pos[]={0,0,0,0,0,1};
+int flag=1;
 void loop()
 {
   if (RX_RCV) {
@@ -59,5 +49,12 @@ void loop()
       try_connect(BT.MSG());                       // Try connecting
     }
     RX_RCV = false;
+  }
+  
+  if(Cells.r_trap()==2 && flag){
+    Reg.set_data(Cells.get_cells(),pos);
+    Reg.print_data();
+    
+    flag=0;
   }
 }

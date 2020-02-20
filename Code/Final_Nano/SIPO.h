@@ -12,7 +12,8 @@ class SipoClass {
         SipoClass();
         void ClearBuffer();
         void UpdateReg();
-        void LoadData(bool dat[]);
+        void print_data();
+        void set_data(unsigned char cell[], int pos[]);
 };
 
 void setEnable_PWM(int val);

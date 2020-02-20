@@ -16,12 +16,21 @@ class Bluetooth {
 
 class Braille_buffer {
   private:
-    unsigned char cells[60];                    // Char array to store the braille cells
+    unsigned char cells[80];                    // Char array to store the braille cells
     bool buffer_empty = true;                   //
     int char_count;                             // Counter to keep track of cells recieved
     int index;                                  // Counter to keep track of cells recieved
+    int trap=0;
   public:
     Braille_buffer();
+    void print_cells();
+    void s_trap(){
+      trap++;
+    }
+    int r_trap(){
+      return trap;
+    }
+    unsigned char * get_cells();                // To return the cells content
     void load(unsigned char ch);                // To load the data into the cells
     void reset_index();                         // Reset the inde back to zero
     int count();                                // Return the count of the braille cells data currently present
